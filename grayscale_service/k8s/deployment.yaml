@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grayscale-service
+  labels:
+    app: grayscale-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: grayscale-service
+  template:
+    metadata:
+      labels:
+        app: grayscale-service
+    spec:
+      containers:
+      - name: grayscale-service
+        image: grayscale-service:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: video-storage
+          mountPath: /app
+      volumes:
+      - name: video-storage
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grayscale-service
+spec:
+  selector:
+    app: grayscale-service
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP 
