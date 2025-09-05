@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     libopencv-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Configure git to skip SSL verification (for build environment)
+RUN git config --global http.sslVerify false
+
 # Set working directory
 WORKDIR /app
 
@@ -22,7 +25,7 @@ RUN mkdir -p /usr/local/bin/grayscale
 
 # Download face cascade classifier
 RUN mkdir -p /usr/share/opencv4/haarcascades && \
-    wget https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml \
+    wget --no-check-certificate https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml \
     -O /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml
 
 # Copy the entire grayscale_service folder contents
